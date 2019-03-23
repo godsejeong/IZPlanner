@@ -2,12 +2,9 @@ from flask import Flask
 from flask_restful import Resource, Api
 import PlanParser
 import DetailsTimeParser
-import threading
-import json
+
 app = Flask(__name__)
 api = Api(app)
-
-
 
 class RegistUser(Resource):
     def post(self):
@@ -16,7 +13,6 @@ class RegistUser(Resource):
 class DetailPlan(Resource):
     def get(self, plan_name):
         print(plan_name)
-        # DetailsTimeParser.TimeParser.set_info(plan_name)
         detailJson = PlanParser.detailPlan()
         planVaule = detailJson[plan_name]
         plan = DetailsTimeParser.TimeParser.parser(planVaule)

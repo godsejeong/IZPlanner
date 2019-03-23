@@ -16,8 +16,11 @@ def plan():
     timeList = []
     detailLink = []
 
+    itemList = []
+
     planDict = OrderedDict()
     planningJson = OrderedDict()
+
 
     # 요일 - 일정명,일정분류,일정시간,링크(일정상세시간)
     for planBox in soup.select('div.schedule_list > div'):
@@ -41,11 +44,15 @@ def plan():
             timeList.append(time.text)
 
         #data save to Json
+        planDict['day'] = day
         planDict['title'] = titleList.copy()
         planDict['subTitle'] = subTitleList.copy()
         planDict['time'] = timeList.copy()
         planDict['link'] = detailLink.copy()
-        planningJson[day] = dict(planDict)
+        itemList.append(dict(planDict))
+
+    planningJson = itemList
+
     print(json.dumps(planningJson, ensure_ascii=False, indent="\t"))
     return planningJson
 
