@@ -23,4 +23,4 @@ api.add_resource(DetailPlan, '/allPlanList/<string:plan_name>')
 api.add_resource(RegistUser, '/allPlanList')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=80,debug=True)
