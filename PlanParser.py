@@ -1,16 +1,27 @@
+import os
 from selenium import webdriver
 from bs4 import BeautifulSoup
 import json
 from collections import OrderedDict
 
-driver = webdriver.Chrome('/Users/jaemin/PycharmProjects/IZPlanner/chromedriver')
-driver.implicitly_wait(1)
-driver.get('http://m.cafe.daum.net/official-izone/l0C7?boardType=Q')
 
-html = driver.page_source
-soup = BeautifulSoup(html, 'html.parser')
+def driver_setting():
+    options = webdriver.ChromeOptions()
+    options.add_argument("--headless")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disable-setuid-sandbox")
+
+    driver = webdriver.Chrome(executable_path=r"/home/ubuntu/IZPlanner/chromedriver",chrome_options=options)
+    driver.implicitly_wait(3)
+    driver.get('http://m.cafe.daum.net/official-izone/l0C7?boardType=Q')
+
+    return driver.page_source
 
 def plan():
+
+    soup = BeautifulSoup(driver_setting(), 'html.parser')
+
     titleList = []
     subTitleList = []
     timeList = []
@@ -20,7 +31,6 @@ def plan():
 
     planDict = OrderedDict()
     planningJson = OrderedDict()
-
 
     # 요일 - 일정명,일정분류,일정시간,링크(일정상세시간)
     for planBox in soup.select('div.schedule_list > div'):
@@ -55,8 +65,11 @@ def plan():
 
     print(json.dumps(planningJson, ensure_ascii=False, indent="\t"))
     return planningJson
+    #driver.close()
 
 def detailPlan():
+    soup = BeautifulSoup(driver_setting(), 'html.parser')
+
     detailDict = OrderedDict()
     for planBox in soup.select('div.schedule_list > div'):
         daydata = planBox.find('strong', {'class': 'txt_day'}).text
@@ -66,6 +79,6 @@ def detailPlan():
             detailDict[day + " " + title.text] = link.get('href')
     return detailDict
     print(json.dumps(detailDict, ensure_ascii=False, indent="\t"))
-
-
+    #driver.close()
+plan()
 

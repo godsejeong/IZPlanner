@@ -13,7 +13,6 @@ class RegistUser(Resource):
 class DetailPlan(Resource):
     def get(self, plan_name):
         print(plan_name)
-        detailJson = PlanParser.detailPlan()
         planVaule = detailJson[plan_name]
         plan = DetailsTimeParser.TimeParser.parser(planVaule)
         return {'detailPlan': plan}
@@ -23,4 +22,6 @@ api.add_resource(DetailPlan, '/allPlanList/<string:plan_name>')
 api.add_resource(RegistUser, '/allPlanList')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    global detailJson
+    detailJson = PlanParser.detailPlan()
+    app.run(host='0.0.0.0', port=5000, debug=True)
