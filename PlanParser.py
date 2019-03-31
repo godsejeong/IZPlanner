@@ -1,3 +1,4 @@
+from datetime import datetime
 from selenium import webdriver
 from bs4 import BeautifulSoup
 import json
@@ -11,6 +12,13 @@ html = driver.page_source
 soup = BeautifulSoup(html, 'html.parser')
 
 def plan():
+    global  month
+
+    month = datetime.today().month
+    if month < 10:
+        month = '0'+str(month)
+
+
     titleList = []
     subTitleList = []
     timeList = []
@@ -21,7 +29,6 @@ def plan():
     planDict = OrderedDict()
     planningJson = OrderedDict()
 
-
     # 요일 - 일정명,일정분류,일정시간,링크(일정상세시간)
     for planBox in soup.select('div.schedule_list > div'):
         #list clear
@@ -31,9 +38,11 @@ def plan():
         detailLink.clear()
         # weather search
         daydata = planBox.find('strong', {'class': 'txt_day'}).text
-        day = daydata.replace('.', "일")
-        # data Pasing
 
+        day = month+'/'+daydata.split()[0].replace(".",'').strip()
+        dow = daydata.split()[1]
+
+        # data Pasing
         for planLink in planBox.find_all('a',{'class' : 'tiara_button'}):
             detailLink.append(planLink.get('href'))
         for title in planBox.find_all('strong', {'class': 'tit_subject'}):
@@ -45,6 +54,7 @@ def plan():
 
         #data save to Json
         planDict['day'] = day
+        planDict['dow'] = dow
         planDict['title'] = titleList.copy()
         planDict['subTitle'] = subTitleList.copy()
         planDict['time'] = timeList.copy()
@@ -55,6 +65,7 @@ def plan():
 
     print(json.dumps(planningJson, ensure_ascii=False, indent="\t"))
     return planningJson
+    #driver.close()
 
 def detailPlan():
     detailDict = OrderedDict()
@@ -68,4 +79,4 @@ def detailPlan():
     print(json.dumps(detailDict, ensure_ascii=False, indent="\t"))
 
 
-
+plan()
