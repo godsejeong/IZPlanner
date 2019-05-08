@@ -71,12 +71,14 @@ def detailPlan():
     detailDict = OrderedDict()
     for planBox in soup.select('div.schedule_list > div'):
         daydata = planBox.find('strong', {'class': 'txt_day'}).text
-        day = daydata.replace('.', "일")
+        day = daydata.replace('.', "")
         for title in planBox.find_all('strong', {'class': 'tit_subject'}):
             link = planBox.find('a', {'class': 'tiara_button'})
             detailDict[day + " " + title.text] = link.get('href')
+    print(detailDict)
     return detailDict
     print(json.dumps(detailDict, ensure_ascii=False, indent="\t"))
 
 
 plan()
+detailPlan()
