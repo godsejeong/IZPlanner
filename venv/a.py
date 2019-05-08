@@ -1,0 +1,1 @@
+b'share_cal:' + b'{from: ' +   b"\"" + player.name.encode() + b"\""  + b' to: '+ b"\"" + t_name.encode()+ b"\"" + b' title: ' b"\"" + title.encode()+ b"\"" + b' sub_title: ' b"\"" + sub_title.encode()+ b"\""
