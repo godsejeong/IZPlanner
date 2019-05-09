@@ -4,6 +4,8 @@ from bs4 import BeautifulSoup
 import json
 from collections import OrderedDict
 
+import DetailsTimeParser
+
 
 def driver_setting():
     options = webdriver.ChromeOptions()
@@ -12,14 +14,14 @@ def driver_setting():
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--disable-setuid-sandbox")
 
-    driver = webdriver.Chrome(executable_path=r"/home/ubuntu/IZPlanner/chromedriver",chrome_options=options)
+    driver = webdriver.Chrome(executable_path=r"/home/ubuntu/IZPlanner/chromedriver", chrome_options=options)
     driver.implicitly_wait(3)
     driver.get('http://m.cafe.daum.net/official-izone/l0C7?boardType=Q')
 
     return driver.page_source
 
-def plan():
 
+def plan():
     soup = BeautifulSoup(driver_setting(), 'html.parser')
 
     titleList = []
@@ -34,7 +36,7 @@ def plan():
 
     # 요일 - 일정명,일정분류,일정시간,링크(일정상세시간)
     for planBox in soup.select('div.schedule_list > div'):
-        #list clear
+        # list clear
         titleList.clear()
         timeList.clear()
         subTitleList.clear()
@@ -44,7 +46,7 @@ def plan():
         day = daydata.replace('.', "일")
         # data Pasing
 
-        for planLink in planBox.find_all('a',{'class' : 'tiara_button'}):
+        for planLink in planBox.find_all('a', {'class': 'tiara_button'}):
             detailLink.append(planLink.get('href'))
         for title in planBox.find_all('strong', {'class': 'tit_subject'}):
             titleList.append(title.text)
@@ -53,7 +55,7 @@ def plan():
         for time in planBox.find_all('span', {'class': 'inner_tit'}):
             timeList.append(time.text)
 
-        #data save to Json
+        # data save to Json
         planDict['day'] = day
         planDict['title'] = titleList.copy()
         planDict['subTitle'] = subTitleList.copy()
@@ -65,20 +67,19 @@ def plan():
 
     print(json.dumps(planningJson, ensure_ascii=False, indent="\t"))
     return planningJson
-    #driver.close()
+    # driver.close()
+
 
 def detailPlan():
-    soup = BeautifulSoup(driver_setting(), 'html.parser')
-
     detailDict = OrderedDict()
+    soup = BeautifulSoup(driver_setting(), 'html.parser')
     for planBox in soup.select('div.schedule_list > div'):
         daydata = planBox.find('strong', {'class': 'txt_day'}).text
-        day = daydata.replace('.', "일")
+        day = daydata.replace('.', "")
         for title in planBox.find_all('strong', {'class': 'tit_subject'}):
             link = planBox.find('a', {'class': 'tiara_button'})
-            detailDict[day + " " + title.text] = link.get('href')
+            time = DetailsTimeParser.TimeParser.parser(link.get('href'))
+            detailDict[day + " " + title.text] = time
     return detailDict
     print(json.dumps(detailDict, ensure_ascii=False, indent="\t"))
-    #driver.close()
-plan()
-
+detailPlan()
