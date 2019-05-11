@@ -14,9 +14,7 @@ class DetailPlan(Resource):
     def get(self, plan_name):
         print(plan_name)
         detailJson = PlanParser.detailPlan()
-        planVaule = detailJson[plan_name]
-        plan = DetailsTimeParser.TimeParser.parser(planVaule)
-        return {'detailPlan': plan}
+        return {'detailPlan': detailJson}
 
 
 api.add_resource(DetailPlan, '/allPlanList/<string:plan_name>')
