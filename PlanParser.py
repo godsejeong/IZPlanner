@@ -76,10 +76,9 @@ def detailPlan():
     for planBox in soup.select('div.schedule_list > div'):
         daydata = planBox.find('strong', {'class': 'txt_day'}).text
         day = daydata.replace('.', "")
-        for title in planBox.find_all('strong', {'class': 'tit_subject'}):
-            link = planBox.find('a', {'class': 'tiara_button'})
-            time = DetailsTimeParser.TimeParser.parser(link.get('href'))
-            detailDict[day + " " + title.text] = time
+        link = planBox.find('a', {'class': 'tiara_button'})
+        time = DetailsTimeParser.TimeParser.parser(link.get('href'))
+        detailDict[day] = time
+    print(detailDict)
     return detailDict
     print(json.dumps(detailDict, ensure_ascii=False, indent="\t"))
-detailPlan()
