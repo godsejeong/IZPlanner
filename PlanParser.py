@@ -16,7 +16,7 @@ def driver_setting():
     options.add_argument("--disable-setuid-sandbox")
 
     driver = webdriver.Chrome(executable_path=r"/home/ubuntu/IZPlanner/chromedriver", chrome_options=options)
-    driver.implicitly_wait(3)
+    driver.implicitly_wait(1)
     driver.get('http://m.cafe.daum.net/official-izone/l0C7?boardType=Q')
 
     return driver.page_source
