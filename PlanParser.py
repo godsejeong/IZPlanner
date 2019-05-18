@@ -93,6 +93,5 @@ def detailPlan():
     return detailDict
     print(json.dumps(detailDict, ensure_ascii=False, indent="\t"))
 
-
-# plan()
-# detailPlan()
+plan()
+detailPlan()
