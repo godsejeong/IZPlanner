@@ -21,19 +21,19 @@ class DetailPlan(Resource):
         return {'detailPlan': detailJson[plan_name]}
 
 
+
 api.add_resource(DetailPlan, '/allPlanList/<string:plan_name>')
 api.add_resource(RegistUser, '/allPlanList')
 
-
-def start():
+def start_info():
+    print("나오라")
     global plan
     global detailJson
     detailJson = PlanParser.detailPlan()
     plan = PlanParser.plan()
-    print("start")
-    threading.Timer(2.5, start()).start()
-
+    threading.Timer(2.5, start_info()).start()
 
 if __name__ == '__main__':
-    start()
-    app.run(host='0.0.0.0', port=80, debug=True)
+    start_info()
+    app.run(host='0.0.0.0', port=3000, debug=True)
+

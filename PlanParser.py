@@ -95,4 +95,4 @@ def detailPlan():
 
 
 # plan()
-detailPlan()
+# detailPlan()
