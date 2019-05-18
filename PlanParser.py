@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 from selenium import webdriver
 from bs4 import BeautifulSoup
 import json
@@ -22,7 +23,13 @@ def driver_setting():
 
 
 def plan():
+    global month
+
     soup = BeautifulSoup(driver_setting(), 'html.parser')
+
+    month = datetime.today().month
+    if month < 10:
+        month = '0' + str(month)
 
     titleList = []
     subTitleList = []
@@ -43,9 +50,11 @@ def plan():
         detailLink.clear()
         # weather search
         daydata = planBox.find('strong', {'class': 'txt_day'}).text
-        day = daydata.replace('.', "일")
-        # data Pasing
 
+        day = month + '/' + daydata.split()[0].replace(".", '').strip()
+        dow = daydata.split()[1]
+
+        # data Pasing
         for planLink in planBox.find_all('a', {'class': 'tiara_button'}):
             detailLink.append(planLink.get('href'))
         for title in planBox.find_all('strong', {'class': 'tit_subject'}):
@@ -57,6 +66,7 @@ def plan():
 
         # data save to Json
         planDict['day'] = day
+        planDict['dow'] = dow
         planDict['title'] = titleList.copy()
         planDict['subTitle'] = subTitleList.copy()
         planDict['time'] = timeList.copy()
